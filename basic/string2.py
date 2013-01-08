@@ -35,7 +35,7 @@ def verbing(s):
 def not_bad(s):
   before = s.find('not')
   after = s.find('bad') + 3 # we have to replace upto the 'd' in 'bad'
-  if (before > 0) and (after > before): # therefore after > before
+  if (before > 0) and (after > before): # therefore after > 0
     return (s[:before] + 'good' + s[after:])
   else:
     return s
