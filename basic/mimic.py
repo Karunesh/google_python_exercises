@@ -44,16 +44,33 @@ columns, so the output looks better.
 import random
 import sys
 
+def get_file_contents(filename):
+  """Returns contents of file as a single string."""
+  f = open(filename, 'rU')
+  return f.read()
 
 def mimic_dict(filename):
   """Returns mimic dict mapping each word to list of words which follow it."""
-  # +++your code here+++
-  return
+  file_contents = get_file_contents(filename)
+  file_words = file_contents.split()
+  _mimic_dict = {}
+  for i in range(0, (len(file_words) - 1)):
+    if file_words[i] in _mimic_dict:
+      _mimic_dict[file_words[i]] += [file_words[i + 1]]
+    else:
+      _mimic_dict[file_words[i]] = []
+      _mimic_dict[file_words[i]] += [file_words[i + 1]]
+  return _mimic_dict
 
 
 def print_mimic(mimic_dict, word):
   """Given mimic dict and start word, prints 200 random words."""
-  # +++your code here+++
+  result = ''
+  for i in range(0, 200):
+    _string = random.choice(mimic_dict.keys())
+    result += ' '
+    result += random.choice(mimic_dict[_string])
+  print result
   return
 
 
