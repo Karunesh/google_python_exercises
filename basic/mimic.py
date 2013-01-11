@@ -50,7 +50,7 @@ def get_file_contents(filename):
   s = f.read()
   f.close()
   return s
-
+  
 def mimic_dict(filename):
   """Returns mimic dict mapping each word to list of words which follow it."""
   file_contents = get_file_contents(filename)
