@@ -34,14 +34,59 @@ Suggested milestones for incremental development:
  -Fix main() to use the extract_names list
 """
 
+def get_file_lines(filename):
+  f = open(filename, 'rU')
+  file_lines = f.readlines()
+  f.close()
+  return file_lines
+
+def is_valid_line(line):
+  """
+  Check if the beginning of a line matches the format we have for lines with 
+  names and ranks.
+  """
+  line_match = re.search(r'<tr align="right"><td>\d+', line)
+  if line_match:
+    return True
+  return False
+
+def get_rank_and_names(line):
+  """
+  Returns a list containing rank and two names from line, PROVIDED line is valid.
+  """
+  rank_and_names = []
+  rank_match = re.search(r'\d+', line)
+  rank_and_names.append(int(rank_match.group()))
+  names = re.findall(r'>[a-zA-Z]+<', line)
+  for name in names:
+    rank_and_names.append(name[1:-1]) # first and last chars in the matches are '>' and '<'
+  return rank_and_names
+
 def extract_names(filename):
   """
   Given a file name for baby.html, returns a list starting with the year string
   followed by the name-rank strings in alphabetical order.
   ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
   """
-  # +++your code here+++
-  return
+  year_match = re.search(r'[0-9][0-9][0-9][0-9]\.', filename) # A dot for beginning of file extension after year
+  year = int(year_match.group()[:-1]) # last character matched is the dot.
+  
+  name_year_dict = {}
+  file_lines = get_file_lines(filename)
+  for file_line in file_lines:
+    if is_valid_line(file_line):
+      rank_and_names = []
+      rank_and_names = get_rank_and_names(file_line)
+      name_year_dict[rank_and_names[1]] = rank_and_names[0]
+      name_year_dict[rank_and_names[2]] = rank_and_names[0]
+
+  result_list = []
+  result_list.append(str(year))
+  sorted_tuples = sorted(name_year_dict.items())
+  for each_tuple in sorted_tuples:
+    result_list.append(each_tuple[0] + ' ' + str(each_tuple[1]))
+  
+  return result_list
 
 
 def main():
@@ -63,6 +108,17 @@ def main():
   # +++your code here+++
   # For each filename, get the names, then either print the text output
   # or write it to a summary file
+  summary_string = ''
+  for filename in args:
+    for each_string in extract_names(filename):
+      summary_string += each_string
+      summary_string += '\n'
+
+  if summary: # write summary_string to a summary file
+    f = open('summary.txt', 'w')
+    f.write(summary_string)
+  else:
+    print summary_string
   
 if __name__ == '__main__':
   main()
