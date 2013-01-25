@@ -15,8 +15,16 @@ import commands
 """Copy Special exercise
 """
 
-# +++your code here+++
-# Write functions and modify main() to call them
+def get_special_paths(dir_path):
+  if not dir_path.endswith('/'):
+    dir_path = dir_path + '/'
+  files_and_dirs = os.listdir(dir_path)
+  special_paths = []
+  for _name in files_and_dirs:
+    is_special = re.search(r'__\w+__', _name)
+    if is_special:
+      special_paths.append(dir_path + _name)
+  return special_paths
 
 
 
@@ -48,8 +56,17 @@ def main():
     print "error: must specify one or more dirs"
     sys.exit(1)
 
-  # +++your code here+++
-  # Call your functions
+  special_paths = get_special_paths(args[0])
+
+  for special_path in special_paths:
+    if todir: # empty strings return False
+      if not os.path.exists(todir):
+        os.makedirs(todir)
+      shutil.copy(special_path, todir)
+    elif tozip:
+      print 'case tozip yet to be implemented'
+    else:
+      print special_path
   
 if __name__ == "__main__":
   main()
